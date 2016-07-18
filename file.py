@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 from bs4 import BeautifulSoup
-import urllib2
 import sys
 import string
 import argparse
+import sock
 import socket
+socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, '127.0.0.1', 9050, True)
+socket.socket = socks.socksocket
+import urllib2
 import dns.resolver
 import os
 import json
