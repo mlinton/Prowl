@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import sys
 import string
 import argparse
+from stem import Signal
+from stem.control import Controller
 import socks
 import socket
 socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS4, '127.0.0.1', 9050, True)
@@ -33,6 +35,9 @@ def greppage(company, emailformat):
 		"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 		"Connection": "keep-alive" }
 		try:
+			with Controller.from_port(port = 9051) as controller:
+			  controller.authenticate()
+			  controller.signal(Signal.NEWNYM)
 			request = urllib2.Request(i, headers=request_headers)
 			contents = urllib2.urlopen(request).read()
 		except KeyboardInterrupt:
@@ -40,6 +45,7 @@ def greppage(company, emailformat):
 		except:
 			print "Potential Block from Linkedin"
 		try:
+			
 			soup = BeautifulSoup(contents, "lxml")
 			for td in soup.findAll("li", { "class":"profile-card" }):
 				link = td.find('a')['href'].lower()
